@@ -80,28 +80,28 @@ export default function QuizPage({ quiz }) {
     <>
       <PageHead title={quiz.title} description={`Take the quiz: ${quiz.title}`} />
 
-      <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="min-h-screen bg-gray-50 py-4 sm:py-8 px-3 sm:px-4">
         <div className="max-w-4xl mx-auto">
           {/* Quiz Header */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-3">
+              <div className="flex-1">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                   {quiz.title}
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   📚 Book: <span className="font-medium">{quiz.book?.title || 'Unknown'}</span>
                 </p>
                 {quiz.book?.author && (
-                  <p className="text-gray-600 text-sm">by {quiz.book.author}</p>
+                  <p className="text-gray-600 text-xs sm:text-sm">by {quiz.book.author}</p>
                 )}
               </div>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(quiz.difficulty)}`}>
+              <span className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium self-start ${getDifficultyColor(quiz.difficulty)}`}>
                 {quiz.difficulty}
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600 border-t pt-4">
+            <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 border-t pt-3 sm:pt-4">
               <div className="flex items-center">
                 <span className="mr-2">📝</span>
                 <span>{quiz.numberOfQuestions} Questions</span>
@@ -116,8 +116,12 @@ export default function QuizPage({ quiz }) {
               )}
               <div className="flex items-center">
                 <span className="mr-2">📅</span>
-                <span>{new Date(quiz.generatedDate).toLocaleDateString('en-US', {
+                <span className="hidden sm:inline">{new Date(quiz.generatedDate).toLocaleDateString('en-US', {
                   year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}</span>
+                <span className="sm:hidden">{new Date(quiz.generatedDate).toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric'
                 })}</span>
@@ -127,15 +131,15 @@ export default function QuizPage({ quiz }) {
 
           {/* Results Banner */}
           {showFinalResults && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6 text-center">
-              <h2 className="text-2xl font-bold mb-2">Quiz Complete! 🎉</h2>
-              <p className={`text-5xl font-bold ${getScoreColor(percentage)} mb-2`}>
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6 text-center">
+              <h2 className="text-xl sm:text-2xl font-bold mb-2">Quiz Complete! 🎉</h2>
+              <p className={`text-4xl sm:text-5xl font-bold ${getScoreColor(percentage)} mb-2`}>
                 {score} / {quiz.numberOfQuestions}
               </p>
-              <p className="text-xl text-gray-600">
+              <p className="text-lg sm:text-xl text-gray-600">
                 {percentage}% Correct
               </p>
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-xs sm:text-sm text-gray-500 mt-2">
                 {percentage >= 80
                   ? 'Excellent work! 🌟'
                   : percentage >= 60
@@ -147,12 +151,12 @@ export default function QuizPage({ quiz }) {
 
           {/* Progress Indicator */}
           {!showFinalResults && (
-            <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+            <div className="bg-white rounded-lg shadow-md p-3 sm:p-4 mb-4 sm:mb-6">
               <div className="flex justify-between items-center">
-                <div className="text-sm font-medium text-gray-700">
+                <div className="text-xs sm:text-sm font-medium text-gray-700">
                   Question {currentQuestionIndex + 1} of {quiz.numberOfQuestions}
                 </div>
-                <div className="text-sm font-medium text-blue-600">
+                <div className="text-xs sm:text-sm font-medium text-blue-600">
                   Score: {Object.keys(selectedAnswers).filter((key) => 
                     selectedAnswers[key] === quiz.questions[key].correctAnswer
                   ).length} / {Object.keys(selectedAnswers).length}
@@ -171,22 +175,22 @@ export default function QuizPage({ quiz }) {
 
           {/* Current Question */}
           {!showFinalResults && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <div className="flex items-start mb-6">
-                <span className="flex-shrink-0 w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold mr-4 text-lg">
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
+              <div className="flex items-start mb-4 sm:mb-6">
+                <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold mr-3 sm:mr-4 text-base sm:text-lg">
                   {currentQuestionIndex + 1}
                 </span>
-                <h3 className="text-xl font-semibold text-gray-900 flex-1">
+                <h3 className="text-base sm:text-xl font-semibold text-gray-900 flex-1">
                   {currentQuestion.question}
                 </h3>
                 {isAnswered && (
-                  <span className="ml-2 text-3xl">
-                    {selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer ? ' ' : ' '}
+                  <span className="ml-2 text-2xl sm:text-3xl">
+                    {selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer ? '✅' : '❌'}
                   </span>
                 )}
               </div>
 
-              <div className="space-y-3 ml-14">
+              <div className="space-y-2 sm:space-y-3 ml-0 sm:ml-14">
                 {currentQuestion.options.map((option, optIndex) => {
                   const optionLetter = option.charAt(0)
                   const isSelected = selectedAnswers[currentQuestionIndex] === optionLetter
@@ -214,7 +218,7 @@ export default function QuizPage({ quiz }) {
                   return (
                     <label
                       key={optIndex}
-                      className={`block p-4 rounded-lg border-2 transition-all ${optionClass} ${
+                      className={`block p-3 sm:p-4 rounded-lg border-2 transition-all ${optionClass} ${
                         isAnswered ? '' : 'hover:shadow-sm'
                       }`}
                     >
@@ -226,15 +230,15 @@ export default function QuizPage({ quiz }) {
                           checked={isSelected}
                           onChange={() => handleAnswerSelect(optionLetter)}
                           disabled={isAnswered}
-                          className="w-5 h-5 text-blue-600 focus:ring-blue-500 mr-3"
+                          className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 focus:ring-blue-500 mr-2 sm:mr-3 flex-shrink-0"
                         />
-                        <span className={`text-lg ${textClass}`}>
+                        <span className={`text-sm sm:text-lg ${textClass}`}>
                           {option}
                           {isAnswered && isCorrectOption && (
-                            <span className="ml-2 text-green-600 font-bold">✓ Correct</span>
+                            <span className="ml-2 text-green-600 font-bold text-xs sm:text-base">✓ Correct</span>
                           )}
                           {isAnswered && isSelected && !isCorrectOption && (
-                            <span className="ml-2 text-red-600 font-bold">✗ Wrong</span>
+                            <span className="ml-2 text-red-600 font-bold text-xs sm:text-base">✗ Wrong</span>
                           )}
                         </span>
                       </div>
@@ -245,18 +249,18 @@ export default function QuizPage({ quiz }) {
 
               {/* Explanation (shown immediately after selection) */}
               {isAnswered && (
-                <div className={`mt-6 ml-14 p-4 rounded-lg border-2 ${
+                <div className={`mt-4 sm:mt-6 ml-0 sm:ml-14 p-3 sm:p-4 rounded-lg border-2 ${
                   selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
                     ? 'bg-green-50 border-green-200' 
                     : 'bg-blue-50 border-blue-200'
                 }`}>
-                  <p className={`text-sm font-semibold mb-2 ${
+                  <p className={`text-xs sm:text-sm font-semibold mb-2 ${
                     selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
                       ? 'text-green-900' : 'text-blue-900'
                   }`}>
                     💡 Explanation:
                   </p>
-                  <p className={`text-sm ${
+                  <p className={`text-xs sm:text-sm ${
                     selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
                       ? 'text-green-800' : 'text-blue-800'
                   }`}>
@@ -267,10 +271,10 @@ export default function QuizPage({ quiz }) {
 
               {/* Next Question Button */}
               {isAnswered && (
-                <div className="mt-6 ml-14">
+                <div className="mt-4 sm:mt-6 ml-0 sm:ml-14">
                   <button
                     onClick={handleNextQuestion}
-                    className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg shadow-md hover:shadow-lg"
+                    className="w-full bg-blue-600 text-white py-3 px-4 sm:px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium text-base sm:text-lg shadow-md hover:shadow-lg"
                   >
                     {isLastQuestion ? '🎉 See Final Results' : '➡️ Next Question'}
                   </button>
@@ -281,16 +285,16 @@ export default function QuizPage({ quiz }) {
 
           {/* Action Buttons */}
           {showFinalResults && (
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button
                 onClick={() => router.push(quiz.book?.id ? `/books/${quiz.book.id}` : '/')}
-                className="flex-1 bg-blue-600 text-white py-4 rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg shadow-md hover:shadow-lg"
+                className="flex-1 bg-blue-600 text-white py-3 sm:py-4 rounded-lg hover:bg-blue-700 transition-colors font-medium text-base sm:text-lg shadow-md hover:shadow-lg"
               >
                 📚 Back to Book
               </button>
               <button
                 onClick={() => router.push('/')}
-                className="sm:w-auto px-6 py-4 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                className="w-full sm:w-auto px-6 py-3 sm:py-4 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
               >
                 🏠 Home
               </button>

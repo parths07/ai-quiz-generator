@@ -66,7 +66,7 @@ export default function BooksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8 px-3 sm:px-4">
       {toast && (
         <Toast 
           message={toast.message} 
@@ -77,12 +77,12 @@ export default function BooksPage() {
       )}
 
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Books Library</h1>
-          <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Books Library</h1>
+          <div className="flex gap-2 w-full sm:w-auto">
             <a
               href="/upload-test"
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all transform hover:scale-105 btn-press"
+              className="flex-1 sm:flex-none bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all transform hover:scale-105 btn-press text-center text-sm sm:text-base"
             >
               Upload New Book
             </a>
@@ -118,25 +118,25 @@ export default function BooksPage() {
                   {books.map((book, index) => (
                     <div
                       key={book._id}
-                      className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-all card-hover animate-fadeIn"
+                      className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-lg transition-all card-hover animate-fadeIn"
                       style={{ animationDelay: `${index * 0.05}s` }}
                     >
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                        <div className="flex-1 w-full">
+                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                             {book.title}
                           </h3>
                           {book.author && (
-                            <p className="text-gray-600 mb-2">
+                            <p className="text-sm sm:text-base text-gray-600 mb-2">
                               by {book.author}
                             </p>
                           )}
-                          <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                          <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500">
                             <span>📄 {book.totalPages} pages</span>
                             <span>
                               💾 {(book.fileSize / 1024 / 1024).toFixed(2)} MB
                             </span>
-                            <span>
+                            <span className="hidden sm:inline">
                               📅{' '}
                               {new Date(book.uploadDate).toLocaleDateString('en-US', {
                                 year: 'numeric',
@@ -144,18 +144,25 @@ export default function BooksPage() {
                                 day: 'numeric'
                               })}
                             </span>
+                            <span className="sm:hidden">
+                              📅{' '}
+                              {new Date(book.uploadDate).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric'
+                              })}
+                            </span>
                           </div>
                         </div>
-                        <div className="flex gap-2 ml-4">
+                        <div className="flex gap-2 w-full sm:w-auto sm:ml-4">
                           <button
                             onClick={() => router.push(`/books/${book._id}`)}
-                            className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition-all transform hover:scale-105 btn-press"
+                            className="flex-1 sm:flex-none bg-blue-600 text-white px-3 sm:px-4 py-2 rounded text-xs sm:text-sm hover:bg-blue-700 transition-all transform hover:scale-105 btn-press"
                           >
                             View Details
                           </button>
                           <button
                             onClick={() => deleteBook(book._id, book.title)}
-                            className="bg-red-100 text-red-700 px-3 py-1 rounded text-sm hover:bg-red-200 transition-all transform hover:scale-105 btn-press"
+                            className="bg-red-100 text-red-700 px-2 sm:px-3 py-1 sm:py-2 rounded text-xs sm:text-sm hover:bg-red-200 transition-all transform hover:scale-105 btn-press"
                           >
                             Delete
                           </button>

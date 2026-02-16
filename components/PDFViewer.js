@@ -9,11 +9,28 @@ export default function PDFViewer({ pdfUrl, fileName, totalPages }) {
   const [scale, setScale] = useState(1.0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pageWidth, setPageWidth] = useState(null);
 
   // Configure PDF.js worker on mount (client-side only)
   useEffect(() => {
     // Use locally served worker file
     pdfjs.GlobalWorkerOptions.workerSrc = '/pdf-worker/pdf.worker.min.mjs';
+    
+    // Set initial page width based on screen size
+    const updatePageWidth = () => {
+      if (window.innerWidth < 640) {
+        // Mobile: use full width minus padding
+        setPageWidth(window.innerWidth - 32);
+      } else {
+        // Desktop: let PDF render at natural size
+        setPageWidth(null);
+      }
+    };
+    
+    updatePageWidth();
+    window.addEventListener('resize', updatePageWidth);
+    
+    return () => window.removeEventListener('resize', updatePageWidth);
   }, []);
 
   function onDocumentLoadSuccess({ numPages }) {
@@ -48,15 +65,16 @@ export default function PDFViewer({ pdfUrl, fileName, totalPages }) {
   return (
     <div className="pdf-viewer-container">
       {/* Controls Bar */}
-      <div className="bg-gray-100 border-b border-gray-300 p-4 flex items-center justify-between flex-wrap gap-4">
+      <div className="bg-gray-100 border-b border-gray-300 p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
         {/* Page Navigation */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-center sm:justify-start">
           <button
             onClick={() => changePage(-1)}
             disabled={pageNumber <= 1}
-            className="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm sm:text-base"
           >
-            ← Previous
+            <span className="hidden sm:inline">← Previous</span>
+            <span className="sm:hidden">←</span>
           </button>
           
           <div className="flex items-center gap-2">
@@ -71,36 +89,37 @@ export default function PDFViewer({ pdfUrl, fileName, totalPages }) {
                   setPageNumber(page);
                 }
               }}
-              className="w-16 px-2 py-2 border border-gray-300 rounded text-center"
+              className="w-12 sm:w-16 px-1 sm:px-2 py-2 border border-gray-300 rounded text-center text-sm sm:text-base"
             />
-            <span className="text-gray-600">of {numPages || '?'}</span>
+            <span className="text-gray-600 text-sm sm:text-base">of {numPages || '?'}</span>
           </div>
           
           <button
             onClick={() => changePage(1)}
             disabled={pageNumber >= numPages}
-            className="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="px-3 sm:px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm sm:text-base"
           >
-            Next →
+            <span className="hidden sm:inline">Next →</span>
+            <span className="sm:hidden">→</span>
           </button>
         </div>
 
         {/* Zoom Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-center">
           <button
             onClick={zoomOut}
             disabled={scale <= 0.5}
-            className="px-3 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 transition"
+            className="px-3 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 transition text-sm sm:text-base"
           >
             −
           </button>
-          <span className="px-3 py-2 bg-white border border-gray-300 rounded min-w-[80px] text-center">
+          <span className="px-3 py-2 bg-white border border-gray-300 rounded min-w-[70px] sm:min-w-[80px] text-center text-sm sm:text-base">
             {Math.round(scale * 100)}%
           </span>
           <button
             onClick={zoomIn}
             disabled={scale >= 2.0}
-            className="px-3 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 transition"
+            className="px-3 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 transition text-sm sm:text-base"
           >
             +
           </button>
@@ -109,28 +128,29 @@ export default function PDFViewer({ pdfUrl, fileName, totalPages }) {
         {/* Download Button */}
         <button
           onClick={handleDownload}
-          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm sm:text-base"
         >
-          Download PDF
+          <span className="hidden sm:inline">Download PDF</span>
+          <span className="sm:hidden">Download</span>
         </button>
       </div>
 
       {/* PDF Display */}
       <div 
-        className="pdf-display bg-gray-50 p-8 overflow-auto" 
+        className="pdf-display bg-gray-50 p-2 sm:p-4 md:p-8 overflow-auto" 
         style={{ maxHeight: 'calc(100vh - 200px)' }}
       >
         {loading && (
           <div className="text-center py-12">
-            <div className="inline-block w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-gray-600">Loading PDF...</p>
+            <div className="inline-block w-10 h-10 sm:w-12 sm:h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-4 text-gray-600 text-sm sm:text-base">Loading PDF...</p>
           </div>
         )}
 
         {error && (
           <div className="text-center py-12">
             <div className="text-red-600 text-xl mb-4">⚠️</div>
-            <p className="text-red-600">{error}</p>
+            <p className="text-red-600 text-sm sm:text-base">{error}</p>
           </div>
         )}
 
@@ -147,7 +167,8 @@ export default function PDFViewer({ pdfUrl, fileName, totalPages }) {
                 scale={scale}
                 renderTextLayer={true}
                 renderAnnotationLayer={true}
-                className="shadow-2xl"
+                className="shadow-lg sm:shadow-2xl max-w-full"
+                width={pageWidth}
               />
             </Document>
           </div>
