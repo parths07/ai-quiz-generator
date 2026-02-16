@@ -72,10 +72,20 @@ export default function BookDetail({ book }) {
 
           {/* Book Information */}
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">{book.title}</h1>
+            <h1 
+              className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 truncate cursor-help" 
+              title={book.title}
+            >
+              {book.title}
+            </h1>
             
             {book.author && (
-              <p className="text-base sm:text-lg text-gray-600 mb-3 sm:mb-4">by {book.author}</p>
+              <p 
+                className="text-base sm:text-lg text-gray-600 mb-3 sm:mb-4 truncate cursor-help" 
+                title={book.author}
+              >
+                by {book.author}
+              </p>
             )}
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-4 sm:mt-6">
