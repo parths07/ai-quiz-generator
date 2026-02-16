@@ -158,7 +158,7 @@ export default function QuizGenerationForm({ book, onGenerate, loading }) {
             Generating Quiz...
           </span>
         ) : (
-          '🧠 Generate Quiz with AI'
+          'Generate Quiz with AI'
         )}
       </button>
     </form>

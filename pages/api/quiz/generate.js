@@ -205,7 +205,7 @@ export default async function handler(req, res) {
 
     // Generate quiz using Gemini AI
     console.log(
-      `🤖 Generating ${numQuestions} ${quizDifficulty} questions...`
+      ` Generating ${numQuestions} ${quizDifficulty} questions...`
     )
 
     const questions = await generateQuiz(
